@@ -4,6 +4,7 @@ using Images
 using Colors
 using HDF5
 using Printf
+using Formatting
 
 function rgb_asUInt8(color::RGBA{Normed{UInt8,8}})
     return reinterpret.([color.r, color.g, color.b])
@@ -18,7 +19,8 @@ end
 function createHDF5Container(hdf5_container_filename::String, 
         num_cameras::Integer,
         num_timesnapshots::Integer, 
-        single_image_heightwidth::Tuple)
+        single_image_heightwidth::Tuple,
+        images_format_format::String)
     
     image_height = single_image_heightwidth[1]
     image_width = single_image_heightwidth[2]
@@ -53,7 +55,7 @@ function createHDF5Container(hdf5_container_filename::String,
             @assert HDF5.ismmappable(fid["images"]["Cam$f"])
             dset = HDF5.readmmap(fid["images"]["Cam$f"]) #Important to use mmap for speed-up
             for g in 1:num_timesnapshots
-                global img = load(@sprintf "testimages/SecondaryCamera%03d/%03d.png" f g)
+                global img = load(format(images_format_format, f, g))
         
                 @time for i in 1:image_height, j in 1:image_width
                     dset[g, i, j, :] = rgb_asUInt8(img[i, j])
