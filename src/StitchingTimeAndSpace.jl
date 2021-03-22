@@ -51,6 +51,7 @@ function createHDF5Container(hdf5_container_filename::String,
         img = Array{RGBA{Normed{UInt8,8}}}(undef, (image_height, image_width)) 
         rgb_asUInt8(img[1,1]); #force compile
         
+        println("Saving each image to HDF5 container...")
         @time for f in 1:num_cameras
             @assert HDF5.ismmappable(fid["images"]["Cam$f"])
             dset = HDF5.readmmap(fid["images"]["Cam$f"]) #Important to use mmap for speed-up
