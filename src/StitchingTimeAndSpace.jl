@@ -56,6 +56,7 @@ function createHDF5Container(hdf5_container_filename::String,
             @assert HDF5.ismmappable(fid["images"]["Cam$f"])
             dset = HDF5.readmmap(fid["images"]["Cam$f"]) #Important to use mmap for speed-up
             for g in 1:num_timesnapshots
+                print("(f = $f / $num_cameras), (g = $g / $num_timesnapshots)")
                 global img = load(format(images_format_format, f, g))
         
                 @time for i in 1:image_height, j in 1:image_width
