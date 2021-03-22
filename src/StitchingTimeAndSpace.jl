@@ -46,7 +46,7 @@ function createHDF5Container(hdf5_container_filename::String,
         end
     
         # Preallocate empty image
-        img = Array{RGBA{Normed{UInt8,8}}}(undef, (500, 500)) 
+        img = Array{RGBA{Normed{UInt8,8}}}(undef, (image_height, image_width)) 
         rgb_asUInt8(img[1,1]); #force compile
         
         @time for f in 1:num_cameras
@@ -55,7 +55,7 @@ function createHDF5Container(hdf5_container_filename::String,
             for g in 1:num_timesnapshots
                 global img = load(@sprintf "testimages/SecondaryCamera%03d/%03d.png" f g)
         
-                @time for i in 1:500, j in 1:500
+                @time for i in 1:image_height, j in 1:image_width
                     dset[g, i, j, :] = rgb_asUInt8(img[i, j])
                 end
             end
